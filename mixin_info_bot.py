@@ -52,12 +52,16 @@ def on_message(ws, message):
 
         if categoryindata == "PLAIN_TEXT":
             realData = realData.decode('utf-8')
-            if realData == "mixin":
-                print(realData)
+            if "mixin" == realData.lower():
                 main_net_info = wallet_api.main_net_info()
-                main_net_node = wallet_api.github_main_net_node_info()
                 response = "Uptime: %s Version: %s Total %d full nodes\n"%(main_net_info.uptime, main_net_info.version, len(main_net_info.graph.consensus))
                 MIXIN_WS_API.sendUserText(ws, conversationId, userId, response)
+                return
+            if "mixinfull" == realData.lower():
+                main_net_info = wallet_api.main_net_info()
+                response = "Uptime: %s Version: %s Total %d full nodes\n"%(main_net_info.uptime, main_net_info.version, len(main_net_info.graph.consensus))
+                MIXIN_WS_API.sendUserText(ws, conversationId, userId, response)
+                main_net_node = wallet_api.github_main_net_node_info()
                 for eachNode in main_net_info.graph.consensus:
                     thisRecord = ""
                     thisRecord += eachNode.state
@@ -78,8 +82,10 @@ def on_message(ws, message):
                     #    thisRecord += ","
                     thisRecord += str(datetime.date.fromtimestamp((eachNode.timestamp)/(1000 * 1000 * 1000)))
                     MIXIN_WS_API.sendUserText(ws, conversationId, userId, thisRecord)
+                return
             else:
-                MIXIN_WS_API.sendUserText(ws, conversationId, userId, realData)
+                response =  "send text mixin or mixinfull to me\n"
+                MIXIN_WS_API.sendUserText(ws, conversationId, userId, response)
 
 
 if __name__ == "__main__":
