@@ -57,6 +57,7 @@ def on_message(ws, message):
                 main_net_info = wallet_api.main_net_info()
                 main_net_node = wallet_api.github_main_net_node_info()
                 response = "Uptime: %s Version: %s Total %d full nodes\n"%(main_net_info.uptime, main_net_info.version, len(main_net_info.graph.consensus))
+                MIXIN_WS_API.sendUserText(ws, conversationId, userId, response)
                 for eachNode in main_net_info.graph.consensus:
                     thisRecord = ""
                     thisRecord += eachNode.state
@@ -76,8 +77,7 @@ def on_message(ws, message):
                     #    thisRecord += "Anonymous"
                     #    thisRecord += ","
                     thisRecord += str(datetime.date.fromtimestamp((eachNode.timestamp)/(1000 * 1000 * 1000)))
-                    response += thisRecord
-                MIXIN_WS_API.sendUserText(ws, conversationId, userId, response)
+                    MIXIN_WS_API.sendUserText(ws, conversationId, userId, thisRecord)
             else:
                 MIXIN_WS_API.sendUserText(ws, conversationId, userId, realData)
 
