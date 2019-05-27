@@ -8,6 +8,7 @@ import time
 from io import BytesIO
 import base64
 import gzip
+import datetime
 
 try:
     import thread
@@ -55,7 +56,27 @@ def on_message(ws, message):
                 print(realData)
                 main_net_info = wallet_api.main_net_info()
                 main_net_node = wallet_api.github_main_net_node_info()
-                response = "Uptime: %s\nVersion: %s\n Total %d full nodes"%(main_net_info.uptime, main_net_info.version, len(main_net_info.graph.consensus))
+                response = "Uptime: %s Version: %s Total %d full nodes\n"%(main_net_info.uptime, main_net_info.version, len(main_net_info.graph.consensus))
+                for eachNode in main_net_info.graph.consensus:
+                    thisRecord = ""
+                    thisRecord += eachNode.state
+                    thisRecord += ","
+                    thisRecord += eachNode.node
+                    thisRecord += ","
+
+                    i = 0
+                    #for eachGithub in main_net_node:
+                    #    if eachNode.signer == eachGithub.get("signer"):
+                    #        thisRecord += eachGithub.get("host")
+                    #        thisRecord += ","
+                    #        break
+                    #    else:
+                    #        i+=1
+                    #if i == len(github_node_info):
+                    #    thisRecord += "Anonymous"
+                    #    thisRecord += ","
+                    thisRecord += str(datetime.date.fromtimestamp((eachNode.timestamp)/(1000 * 1000 * 1000)))
+                    response += thisRecord
                 MIXIN_WS_API.sendUserText(ws, conversationId, userId, response)
             else:
                 MIXIN_WS_API.sendUserText(ws, conversationId, userId, realData)
