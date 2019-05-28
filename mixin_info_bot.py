@@ -22,16 +22,9 @@ def on_message(ws, message):
     f = gzip.GzipFile(mode="rb", fileobj=inbuffer)
     rdata_injson = f.read()
     rdata_obj = json.loads(rdata_injson)
-    print("-------json object begin---------")
-    print(rdata_obj)
-    print("-------json object end---------")
     action = rdata_obj["action"]
 
-    if rdata_obj["data"] is not None:
-        print("data in message:",rdata_obj["data"])
 
-    if rdata_obj["data"] is not None and rdata_obj["data"]["category"] is not None:
-        print(rdata_obj["data"]["category"])
 
     if action == "CREATE_MESSAGE":
 
