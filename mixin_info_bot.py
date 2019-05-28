@@ -78,7 +78,6 @@ def on_message(ws, message):
                     MIXIN_WS_API.sendUserText(ws, conversationId, userId, thisRecord)
                 return
             if "search" in realData.lower():
-                print(realData)
                 tosplit = realData.lower().split(":")
                 if(len(tosplit) > 1):
                     try:
