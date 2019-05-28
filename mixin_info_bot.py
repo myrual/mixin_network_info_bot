@@ -84,6 +84,7 @@ def on_message(ws, message):
                         print(tosplit)
                         tosearch = tosplit[1]
                         result = mixin_api.SearchUser(tosearch)
+                        print(result)
                         if "data" in result:
                             user_id_uuid = result["data"]["user_id"]
                             MIXIN_WS_API.sendUserText(ws, conversationId, userId, user_id_uuid)
