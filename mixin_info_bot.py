@@ -9,6 +9,7 @@ from io import BytesIO
 import base64
 import gzip
 import datetime
+import sys
 
 try:
     import thread
@@ -76,10 +77,27 @@ def on_message(ws, message):
                     thisRecord += str(datetime.date.fromtimestamp((eachNode.timestamp)/(1000 * 1000 * 1000)))
                     MIXIN_WS_API.sendUserText(ws, conversationId, userId, thisRecord)
                 return
-            else:
-                response =  "send text mixin or mixinfull to me\n"
-                MIXIN_WS_API.sendUserText(ws, conversationId, userId, response)
+            if "search" in realData.lower():
+                print(realData)
+                tosplit = realData.lower().split(":")
+                if(len(tosplit) > 1):
+                    try:
+                        print(tosplit)
+                        tosearch = tosplit[1]
+                        result = mixin_api.SearchUser(tosearch)
+                        if "data" in result:
+                            user_id_uuid = result["data"]["user_id"]
+                            MIXIN_WS_API.sendUserText(ws, conversationId, userId, user_id_uuid)
+                            return
+                    except e:
+                        print(sys.exc_info()[0])
+                        
+                    finally:
+                        print("finish")
 
+            response =  "send text mixin or mixinfull to me\n"
+            MIXIN_WS_API.sendUserText(ws, conversationId, userId, response)
+            return
 
 if __name__ == "__main__":
 
