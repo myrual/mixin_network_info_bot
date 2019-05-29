@@ -80,34 +80,23 @@ def on_message(ws, message):
             if "search" in realData.lower():
                 tosplit = realData.lower().split(":")
                 if(len(tosplit) > 1):
-                    try:
-                        print(tosplit)
-                        tosearch = tosplit[1]
-                        result = mixin_api.SearchUser(tosearch)
-                        print(result)
-                        if "data" in result:
-                            user_id_uuid = result["data"]["user_id"]
-                            MIXIN_WS_API.sendUserText(ws, conversationId, userId, user_id_uuid)
-                            return
-                    except e:
-                        print(sys.exc_info()[0])
-                        
-                    finally:
-                        print("finish")
+                    print(tosplit)
+                    tosearch = tosplit[1]
+                    result = mixin_api.SearchUser(tosearch)
+                    print(result)
+                    if "data" in result:
+                        user_id_uuid = result["data"]["user_id"]
+                        MIXIN_WS_API.sendUserText(ws, conversationId, userId, user_id_uuid)
+                        return
 
             if "readuser" in realData.lower():
                 tosplit = realData.lower().split(":")
                 if(len(tosplit) > 1):
-                    try:
-                        tosearch = tosplit[1]
-                        result = mixin_api.getUserInfo(tosearch)
-                        if "data" in result:
-                            allinfo = result["data"]
-                            MIXIN_WS_API.sendUserText(ws, conversationId, userId, str(allinfo))
-                            return
-                    except e:
-                        return
-                    finally:
+                    tosearch = tosplit[1]
+                    result = mixin_api.getUserInfo(tosearch)
+                    if "data" in result:
+                        allinfo = result["data"]
+                        MIXIN_WS_API.sendUserText(ws, conversationId, userId, str(allinfo))
                         return
 
             response =  "send text mixin or mixinfull to me\n"
