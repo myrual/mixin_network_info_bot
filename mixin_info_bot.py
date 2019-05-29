@@ -17,6 +17,8 @@ except ImportError:
     import _thread as thread
 
 
+def on_error(ws, error):
+    print(error)
 def on_message(ws, message):
     inbuffer = BytesIO(message)
 
@@ -107,6 +109,6 @@ if __name__ == "__main__":
 
     mixin_api = MIXIN_API(mixin_config)
 
-    mixin_ws = MIXIN_WS_API(on_message=on_message)
+    mixin_ws = MIXIN_WS_API(on_message=on_message, on_open =None, on_error = on_error, on_data  =None, on_close = None)
 
     mixin_ws.run()
