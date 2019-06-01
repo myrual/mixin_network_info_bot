@@ -17,6 +17,8 @@ except ImportError:
     import _thread as thread
 
 
+def on_error(ws, error):
+    print(error)
 def on_message(ws, message):
     inbuffer = BytesIO(message)
 
