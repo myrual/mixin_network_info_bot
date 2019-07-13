@@ -46,64 +46,14 @@ def on_message(ws, message):
         if 'error' in rdata_obj:
             return
 
+        if categoryindata == "SYSTEM_ACCOUNT_SNAPSHOT":
+            rdJs = json.loads(realData)
+            if ( float(rdJs["amount"]) > 0 ):
+                mixin_api.transferTo(userId, rdJs["asset_id"], rdJs["amount"], "")
         if categoryindata == "PLAIN_TEXT":
+
             realData = realData.decode('utf-8')
-            if "mixin" == realData.lower():
-                main_net_info = wallet_api.main_net_info()
-                response = "Uptime: %s Version: %s Total %d full nodes\n"%(main_net_info.uptime, main_net_info.version, len(main_net_info.graph.consensus))
-                MIXIN_WS_API.sendUserText(ws, conversationId, userId, response)
-                return
-            if "mixinfull" == realData.lower():
-                main_net_info = wallet_api.main_net_info()
-                response = "Uptime: %s Version: %s Total %d full nodes\n"%(main_net_info.uptime, main_net_info.version, len(main_net_info.graph.consensus))
-                MIXIN_WS_API.sendUserText(ws, conversationId, userId, response)
-                main_net_node = wallet_api.github_main_net_node_info()
-                for eachNode in main_net_info.graph.consensus:
-                    thisRecord = ""
-                    thisRecord += eachNode.state
-                    thisRecord += ","
-                    thisRecord += eachNode.node
-                    thisRecord += ","
-
-                    i = 0
-                    #for eachGithub in main_net_node:
-                    #    if eachNode.signer == eachGithub.get("signer"):
-                    #        thisRecord += eachGithub.get("host")
-                    #        thisRecord += ","
-                    #        break
-                    #    else:
-                    #        i+=1
-                    #if i == len(github_node_info):
-                    #    thisRecord += "Anonymous"
-                    #    thisRecord += ","
-                    thisRecord += str(datetime.date.fromtimestamp((eachNode.timestamp)/(1000 * 1000 * 1000)))
-                    MIXIN_WS_API.sendUserText(ws, conversationId, userId, thisRecord)
-                return
-            if "search" in realData.lower():
-                tosplit = realData.lower().split(":")
-                if(len(tosplit) > 1):
-                    print(tosplit)
-                    tosearch = tosplit[1]
-                    result = mixin_api.SearchUser(tosearch)
-                    print(result)
-                    if "data" in result:
-                        user_id_uuid = result["data"]["user_id"]
-                        MIXIN_WS_API.sendUserText(ws, conversationId, userId, user_id_uuid)
-                        return
-
-            if "readuser" in realData.lower():
-                tosplit = realData.lower().split(":")
-                if(len(tosplit) > 1):
-                    tosearch = tosplit[1]
-                    result = mixin_api.getUserInfo(tosearch, "")
-                    if "data" in result:
-                        allinfo = result["data"]
-                        MIXIN_WS_API.sendUserText(ws, conversationId, userId, str(allinfo))
-                        return
-
-            response =  "send text mixin or mixinfull to me\n"
-            MIXIN_WS_API.sendUserText(ws, conversationId, userId, response)
-            return
+            MIXIN_WS_API.sendUserText(ws, conversationId, userId, realData)
 
 if __name__ == "__main__":
 
